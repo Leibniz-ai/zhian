@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Manrope:wght@400;600;700;800&display=swap');
+
+:root {
+  font-family: Manrope, Avenir, Helvetica, sans-serif;
+  color: #263025;
+  background:
+    radial-gradient(circle at 9% 8%, rgba(224, 175, 68, 0.22), transparent 30%),
+    radial-gradient(circle at 92% 12%, rgba(50, 104, 74, 0.18), transparent 26%),
+    linear-gradient(180deg, #fbf5e4 0%, #eef1df 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
