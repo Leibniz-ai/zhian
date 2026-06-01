@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>翔安区治安防控综合平台</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body { margin: 0; padding: 0; background-color: #eef3f8; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.5); border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
+    
+    input[type=range] { -webkit-appearance: none; background: transparent; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #06b6d4; cursor: pointer; margin-top: -6px; box-shadow: 0 0 10px rgba(6, 182, 212, 0.8); }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px; }
+    
+    .img-placeholder-container img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; mix-blend-mode: luminosity; }
+    
+    /* 大屏地图底图反相与科技蓝滤镜 */
+    .map-placeholder-wrapper { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+    .map-placeholder-wrapper img { 
+      width: 100%; height: 100%; object-fit: cover; 
+      filter: invert(0.92) hue-rotate(190deg) saturate(2.5) brightness(0.9) contrast(1.5); 
+    }
+    .map-placeholder-wrapper {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.14), transparent 22%),
+        radial-gradient(circle at 78% 26%, rgba(59, 130, 246, 0.12), transparent 24%),
+        radial-gradient(circle at 64% 76%, rgba(14, 165, 233, 0.08), transparent 28%),
+        linear-gradient(180deg, #06101b 0%, #071320 44%, #0a1827 100%);
+    }
+    .map-panel-noise {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.45;
+      mix-blend-mode: screen;
+    }
+    .map-panel-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, transparent 42%, rgba(2, 6, 23, 0.28) 72%, rgba(2, 6, 23, 0.7) 100%);
+      pointer-events: none;
+    }
+    .map-district-label {
+      position: absolute;
+      min-width: 112px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(8, 15, 28, 0.84);
+      border: 1px solid rgba(34, 211, 238, 0.24);
+      box-shadow: 0 10px 24px rgba(2, 6, 23, 0.32);
+      backdrop-filter: blur(10px);
+    }
+    .map-overlay-card {
+      background: rgba(8, 15, 28, 0.8);
+      border: 1px solid rgba(34, 211, 238, 0.16);
+      box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
+      backdrop-filter: blur(12px);
+    }
+    .ops-density {
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+    .ops-density .text-xl { font-size: 1.0625rem !important; line-height: 1.45 !important; }
+    .ops-density .text-lg { font-size: 0.9375rem !important; line-height: 1.45 !important; }
+    .ops-density .text-base { font-size: 0.875rem !important; line-height: 1.45 !important; }
+    .ops-density .text-sm { font-size: 0.8125rem !important; line-height: 1.45 !important; }
+    .ops-density .text-xs { font-size: 0.71875rem !important; line-height: 1.4 !important; }
+    .ops-density .text-2xl { font-size: 1.25rem !important; line-height: 1.25 !important; }
+    .ops-density .text-\[11px\] { font-size: 0.6875rem !important; line-height: 1.35 !important; }
+    .ops-density .text-\[10px\] { font-size: 0.625rem !important; line-height: 1.3 !important; }
+    .ops-density .text-\[9px\] { font-size: 0.5625rem !important; line-height: 1.25 !important; }
+    .ops-density h2.text-xl,
+    .ops-density h3.text-lg {
+      font-size: 0.9375rem !important;
+      line-height: 1.4 !important;
+      font-weight: 700;
+    }
+    .ops-density .p-6 { padding: 1.125rem !important; }
+    .ops-density .p-5 { padding: 1rem !important; }
+    .ops-density .p-4 { padding: 0.875rem !important; }
+    .ops-density .p-3 { padding: 0.6875rem !important; }
+    .ops-density .px-6 { padding-left: 1.125rem !important; padding-right: 1.125rem !important; }
+    .ops-density .py-5 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    .ops-density .mb-6 { margin-bottom: 1rem !important; }
+    .ops-density .mb-5 { margin-bottom: 0.875rem !important; }
+    .ops-density .mb-4 { margin-bottom: 0.75rem !important; }
+    .ops-density .mt-5 { margin-top: 1rem !important; }
+    .ops-density .gap-6 { gap: 1rem !important; }
+    .ops-density .gap-5 { gap: 0.875rem !important; }
+    .ops-density .space-y-5 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.875rem !important; }
+    .ops-density .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem !important; }
+    .alert-modal-density .text-base { font-size: 0.875rem !important; line-height: 1.4 !important; }
+    .alert-modal-density .text-2xl { font-size: 1.25rem !important; line-height: 1.2 !important; }
+    .alert-modal-density .text-sm { font-size: 0.8125rem !important; line-height: 1.45 !important; }
+    .alert-modal-density .p-6 { padding: 1rem !important; }
+    .alert-modal-density .p-4 { padding: 0.875rem !important; }
+    .alert-modal-density .py-3\.5 { padding-top: 0.7rem !important; padding-bottom: 0.7rem !important; }
+    @keyframes patrolSweep {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+    .patrol-sweep {
+      animation: patrolSweep 4s linear infinite;
+    }
+    .config-light .cctv-black-frame,
+    .config-light .cctv-black-frame .cctv-black-cover {
+      background-color: #000000 !important;
+    }
+    .config-light {
+      background: #eef3f8 !important;
+      color: #263241;
+    }
+    .config-light [class*="bg-[#0b1120]"],
+    .config-light [class*="from-slate-950"],
+    .config-light [class*="to-[#0b1120]"],
+    .config-light [class*="bg-gradient-to-br"] {
+      background: #eef3f8 !important;
+    }
+    .config-light [class*="bg-slate-950"],
+    .config-light [class*="bg-slate-900"],
+    .config-light [class*="bg-slate-800"] {
+      background-color: #ffffff !important;
+    }
+    .config-light [class*="bg-cyan-950"] {
+      background-color: #e0f2fe !important;
+    }
+    .config-light [class*="bg-red-950"] {
+      background-color: #fee2e2 !important;
+    }
+    .config-light [class*="bg-orange-950"] {
+      background-color: #ffedd5 !important;
+    }
+    .config-light [class*="bg-emerald-950"] {
+      background-color: #dcfce7 !important;
+    }
+    .config-light [class*="bg-amber-950"] {
+      background-color: #fef3c7 !important;
+    }
+    .config-light [class*="border-slate-800"],
+    .config-light [class*="border-slate-700"],
+    .config-light [class*="border-slate-600"] {
+      border-color: #d7dee8 !important;
+    }
+    .config-light [class*="border-cyan-"],
+    .config-light [class*="border-blue-"] {
+      border-color: #8bc5e8 !important;
+    }
+    .config-light [class*="border-red-"] {
+      border-color: #f3a7a7 !important;
+    }
+    .config-light [class*="border-emerald-"] {
+      border-color: #91d7ad !important;
+    }
+    .config-light .text-white,
+    .config-light [class*="text-slate-100"],
+    .config-light [class*="text-slate-200"],
+    .config-light [class*="text-slate-300"] {
+      color: #1f2937 !important;
+    }
+    .config-light [class*="text-slate-400"],
+    .config-light [class*="text-slate-500"],
+    .config-light [class*="text-slate-600"] {
+      color: #64748b !important;
+    }
+    .config-light [class*="text-cyan-"],
+    .config-light [class*="text-blue-"] {
+      color: #0369a1 !important;
+    }
+    .config-light [class*="text-red-"] {
+      color: #b91c1c !important;
+    }
+    .config-light [class*="text-orange-"],
+    .config-light [class*="text-yellow-"],
+    .config-light [class*="text-amber-"] {
+      color: #b45309 !important;
+    }
+    .config-light [class*="text-emerald-"] {
+      color: #047857 !important;
+    }
+    .config-light input,
+    .config-light select,
+    .config-light textarea {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #cbd5e1 !important;
+    }
+    .config-light table thead {
+      background: #f8fafc !important;
+    }
+    .config-light tr:hover {
+      background-color: #f1f5f9 !important;
+    }
+    .config-light .shadow-2xl,
+    .config-light .shadow-lg {
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12) !important;
+    }
+    .config-light .bg-cyan-600,
+    .config-light .bg-cyan-500,
+    .config-light .bg-blue-600,
+    .config-light .bg-red-600,
+    .config-light .bg-red-500,
+    .config-light .bg-orange-600,
+    .config-light .bg-orange-500,
+    .config-light .bg-emerald-500 {
+      color: #ffffff !important;
+    }
+    .config-light > .absolute.inset-0.z-50 {
+      background: rgba(15, 23, 42, 0.38) !important;
+    }
+    .config-light .z-50 [class*="bg-slate-900"],
+    .config-light .z-50 [class*="bg-slate-950"] {
+      background-color: #ffffff !important;
+    }
+    .config-light .light-backdrop {
+      background: rgba(15, 23, 42, 0.42) !important;
+    }
+    .config-light .alert-title-bar .text-white,
+    .config-light .alert-title-bar [class*="text-white"] {
+      color: #ffffff !important;
+    }
+    .config-light .alert-title-bar[class*="bg-orange-950"] {
+      background-color: #9a3412 !important;
+    }
+    .config-light .alert-title-bar [class*="text-orange-"] {
+      color: #fed7aa !important;
+    }
+    .config-light .theme-dark-surface,
+    .config-light .theme-dark-surface[class*="bg-[#080d19]"],
+    .config-light .theme-dark-surface[class*="bg-black"],
+    .config-light .theme-dark-surface[class*="bg-slate-950"],
+    .config-light .theme-dark-surface[class*="bg-slate-900"],
+    .config-light .theme-dark-surface[class*="bg-slate-800"] {
+      background-color: #020617 !important;
+      color: #e5e7eb !important;
+    }
+    .config-light .theme-dark-surface [class*="bg-slate-950"],
+    .config-light .theme-dark-surface [class*="bg-black"] {
+      background-color: rgba(2, 6, 23, 0.82) !important;
+    }
+    .config-light .theme-dark-surface [class*="bg-slate-900"],
+    .config-light .theme-dark-surface [class*="bg-slate-800"] {
+      background-color: rgba(15, 23, 42, 0.82) !important;
+    }
+    .config-light .theme-dark-surface [class*="border-slate-"],
+    .config-light .theme-dark-surface [class*="border-white"] {
+      border-color: rgba(71, 85, 105, 0.78) !important;
+    }
+    .config-light .theme-dark-surface .text-white,
+    .config-light .theme-dark-surface [class*="text-slate-100"],
+    .config-light .theme-dark-surface [class*="text-slate-200"] {
+      color: #f8fafc !important;
+    }
+    .config-light .theme-dark-surface [class*="text-slate-300"] {
+      color: #cbd5e1 !important;
+    }
+    .config-light .theme-dark-surface [class*="text-slate-400"],
+    .config-light .theme-dark-surface [class*="text-slate-500"],
+    .config-light .theme-dark-surface [class*="text-slate-600"] {
+      color: #94a3b8 !important;
+    }
+    .config-light .theme-dark-surface [class*="text-cyan-"],
+    .config-light .theme-dark-surface [class*="text-blue-"] {
+      color: #67e8f9 !important;
+    }
+    .config-light .theme-dark-surface [class*="text-red-"] {
+      color: #f87171 !important;
+    }
+    .config-light .theme-dark-surface [class*="text-orange-"],
+    .config-light .theme-dark-surface [class*="text-yellow-"],
+    .config-light .theme-dark-surface [class*="text-amber-"] {
+      color: #fbbf24 !important;
+    }
+    .config-light .theme-dark-surface [class*="text-emerald-"] {
+      color: #34d399 !important;
+    }
+    .config-light .theme-dark-surface.cctv-black-frame,
+    .config-light .theme-dark-surface.cctv-black-frame[class*="bg-black"],
+    .config-light .theme-dark-surface.cctv-black-frame .cctv-black-cover,
+    .config-light .theme-dark-surface.cctv-black-frame .cctv-black-cover[class*="bg-black"] {
+      background-color: #000000 !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="app.js"></script>
+</body>
+</html>

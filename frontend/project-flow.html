@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>翔安区治安防控综合平台 - 项目流程图</title>
+  <style>
+    :root {
+      --bg: #eef4ff;
+      --ink: #16345d;
+      --muted: #61758f;
+      --line: #8aa2c7;
+      --blue: #2f6bff;
+      --blue-soft: #dcebff;
+      --green: #19a45a;
+      --green-soft: #e6f9ed;
+      --purple: #7a45ff;
+      --purple-soft: #efe8ff;
+      --orange: #ff961f;
+      --orange-deep: #ff8100;
+      --surface: rgba(255, 255, 255, 0.92);
+      --shadow: 0 22px 44px rgba(53, 84, 138, 0.12);
+      --soft-shadow: 0 12px 28px rgba(68, 96, 145, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(47, 107, 255, 0.1), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(122, 69, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 30% 88%, rgba(25, 164, 90, 0.06), transparent 26%),
+        linear-gradient(180deg, #f9fbff 0%, #eef4ff 100%);
+    }
+
+    body {
+      padding: 28px;
+    }
+
+    .page {
+      max-width: 100%;
+    }
+
+    .hero {
+      max-width: 1760px;
+      margin: 0 auto 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.14;
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 980px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-note {
+      flex: 0 0 auto;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(47, 107, 255, 0.14);
+      box-shadow: var(--soft-shadow);
+      font-size: 13px;
+      line-height: 1.7;
+      color: #35537d;
+    }
+
+    .board-wrap {
+      overflow-x: auto;
+      padding-bottom: 12px;
+    }
+
+    .board {
+      width: 1760px;
+      margin: 0 auto;
+      padding: 44px 34px 38px;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72)),
+        linear-gradient(135deg, rgba(47, 107, 255, 0.03), rgba(122, 69, 255, 0.03));
+      box-shadow: 0 28px 54px rgba(49, 86, 148, 0.12);
+      position: relative;
+    }
+
+    .board::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 28px;
+      border: 1px solid rgba(123, 148, 194, 0.18);
+      pointer-events: none;
+    }
+
+    .main-flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: 120px 68px 300px 68px 360px 68px 280px 68px 420px;
+      gap: 0;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .start-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 760px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 108px;
+      height: 58px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #2b4f88 0%, #19355f 100%);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      box-shadow: 0 12px 24px rgba(25, 53, 95, 0.24);
+    }
+
+    .flow-link {
+      position: relative;
+      align-self: center;
+      height: 4px;
+      margin: 0 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(111, 132, 165, 0.55), rgba(111, 132, 165, 0.95));
+    }
+
+    .flow-link::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      border-top: 4px solid #6f84a5;
+      border-right: 4px solid #6f84a5;
+      transform: translateY(-50%) rotate(45deg);
+      border-radius: 2px;
+    }
+
+    .flow-link::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      top: -50px;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid rgba(123, 148, 194, 0.26);
+      color: #4d6487;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px rgba(78, 99, 138, 0.08);
+    }
+
+    .group-shell {
+      position: relative;
+      padding: 44px 18px 18px;
+      border-radius: 30px;
+      border: 3px dashed rgba(47, 107, 255, 0.46);
+      background: rgba(255, 255, 255, 0.22);
+      min-height: 760px;
+    }
+
+    .group-shell.green {
+      border-color: rgba(25, 164, 90, 0.46);
+    }
+
+    .group-shell.purple {
+      border-color: rgba(122, 69, 255, 0.46);
+    }
+
+    .group-title {
+      position: absolute;
+      top: -22px;
+      left: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.96);
+      font-size: 18px;
+      font-weight: 700;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .group-title::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 8px rgba(47, 107, 255, 0.12);
+    }
+
+    .group-shell.green .group-title {
+      color: #188a4e;
+    }
+
+    .group-shell.green .group-title::before {
+      background: var(--green);
+      box-shadow: 0 0 0 8px rgba(25, 164, 90, 0.12);
+    }
+
+    .group-shell.purple .group-title {
+      color: #6e37ef;
+    }
+
+    .group-shell.purple .group-title::before {
+      background: var(--purple);
+      box-shadow: 0 0 0 8px rgba(122, 69, 255, 0.12);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px 20px 18px;
+      border-radius: 22px;
+      background: var(--surface);
+      border: 2px solid rgba(47, 107, 255, 0.86);
+      box-shadow: var(--shadow);
+    }
+
+    .card.green {
+      border-color: rgba(25, 164, 90, 0.9);
+    }
+
+    .card.purple {
+      border-color: rgba(122, 69, 255, 0.92);
+    }
+
+    .card.orange {
+      border-color: rgba(255, 129, 0, 0.88);
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.28;
+      color: var(--blue);
+    }
+
+    .card.green h3 {
+      color: var(--green);
+    }
+
+    .card.purple h3 {
+      color: var(--purple);
+    }
+
+    .card.orange h3 {
+      color: var(--orange-deep);
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #2a476d;
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      position: relative;
+      margin-top: 8px;
+      padding-left: 16px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #2a476d;
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.72em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(47, 107, 255, 0.72);
+    }
+
+    .card.green .list li::before {
+      background: rgba(25, 164, 90, 0.78);
+    }
+
+    .card.purple .list li::before {
+      background: rgba(122, 69, 255, 0.78);
+    }
+
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: #2153cc;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .metric.green {
+      background: var(--green-soft);
+      color: #188a4e;
+    }
+
+    .metric.purple {
+      background: var(--purple-soft);
+      color: #6e37ef;
+    }
+
+    .accent-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(47, 107, 255, 0.06);
+      border: 1px dashed rgba(47, 107, 255, 0.3);
+      color: #2b4b74;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .decision-section {
+      position: relative;
+      margin: 30px 0 22px;
+      padding-left: 1048px;
+      z-index: 1;
+    }
+
+    .decision-caption {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 142px;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid rgba(123, 148, 194, 0.24);
+      color: #4d6487;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(78, 99, 138, 0.08);
+    }
+
+    .decision-caption::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-right: 3px solid #6f84a5;
+      border-bottom: 3px solid #6f84a5;
+      transform: rotate(45deg);
+      margin-left: 2px;
+    }
+
+    .decision-row {
+      display: grid;
+      grid-template-columns: 1fr 168px 1fr;
+      align-items: center;
+      gap: 26px;
+      width: 560px;
+    }
+
+    .branch-chip {
+      position: relative;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid rgba(123, 148, 194, 0.24);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      color: #4d6487;
+      box-shadow: 0 8px 20px rgba(78, 99, 138, 0.08);
+    }
+
+    .branch-chip.false {
+      color: #188a4e;
+      border-color: rgba(25, 164, 90, 0.28);
+    }
+
+    .branch-chip.true {
+      color: #ff8100;
+      border-color: rgba(255, 129, 0, 0.26);
+    }
+
+    .branch-chip.false::after,
+    .branch-chip.true::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 24px;
+      height: 4px;
+      border-radius: 999px;
+      background: #7f93b3;
+      transform: translateY(-50%);
+    }
+
+    .branch-chip.false::after {
+      right: -26px;
+      background: #19a45a;
+    }
+
+    .branch-chip.true::before {
+      left: -26px;
+      background: #ff961f;
+    }
+
+    .diamond {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto;
+      transform: rotate(45deg);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffab45 0%, #ff8500 100%);
+      box-shadow: 0 18px 34px rgba(255, 132, 0, 0.22);
+    }
+
+    .diamond span {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      transform: rotate(-45deg);
+      color: #fff;
+      font-size: 23px;
+      font-weight: 800;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .loop-shell {
+      position: relative;
+      margin-top: 16px;
+      padding: 46px 18px 20px;
+      border-radius: 30px;
+      border: 3px dashed rgba(25, 164, 90, 0.46);
+      background: rgba(255, 255, 255, 0.18);
+      z-index: 1;
+    }
+
+    .loop-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr 0.92fr 1.08fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .loop-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(25, 164, 90, 0.07);
+      border: 1px dashed rgba(25, 164, 90, 0.28);
+      font-size: 13px;
+      line-height: 1.75;
+      color: #2d5e43;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.75;
+      color: #6e82a2;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div>
+        <h1>翔安区治安防控综合平台项目流程图</h1>
+        <p>这版按当前原型页面的真实业务链路重绘，重点覆盖前置布控配置、实时视频感知、统一事件生成、告警分级复核、联动处置、误报回流、历史处置记录和复盘优化回写。布局上我已经改成规整分栏，避免之前那种卡片互相压住的情况。</p>
+      </div>
+      <div class="hero-note">
+        推荐打开方式：<br />
+        1. 直接双击 `frontend/project-flow.html`<br />
+        2. 或访问本地地址预览，便于缩放查看
+      </div>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board">
+        <div class="main-flow">
+          <div class="start-wrap">
+            <div class="pill">开始</div>
+          </div>
+
+          <div class="flow-link" data-label="进入配置"></div>
+
+          <section class="group-shell">
+            <div class="group-title">系统配置中心</div>
+            <div class="stack">
+              <div class="card">
+                <h3>区域配置</h3>
+                <p>启用重点防区，决定哪些街道、网格和重点场景进入实战布控与态势展示。</p>
+              </div>
+              <div class="card">
+                <h3>摄像头点位配置</h3>
+                <p>绑定视频通道、在线状态、核心点位和算法归属，形成可感知的视频资源池。</p>
+              </div>
+              <div class="card">
+                <h3>规则与 ROI 配置</h3>
+                <p>按场景设置 ROI 围栏、聚集人数阈值和持续时长阈值，用于突出重点区域并减少误报。</p>
+                <div class="metric-row">
+                  <span class="metric">ROI 围栏</span>
+                  <span class="metric">人数阈值</span>
+                  <span class="metric">持续时长</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="flow-link" data-label="启用防区 / 点位 / 规则"></div>
+
+          <section class="group-shell">
+            <div class="group-title">智能感知与态势展示</div>
+            <div class="stack">
+              <div class="card">
+                <h3>视频流实时接入</h3>
+                <p>已启用防区的监控通道持续送流，作为聚集、打架、涉稳和异常行为识别的实时输入。</p>
+              </div>
+              <div class="card">
+                <h3>AI 场景识别</h3>
+                <ul class="list">
+                  <li>涉稳 / 讨薪聚集识别</li>
+                  <li>多人异常聚集识别</li>
+                  <li>打架斗殴 / 肢体冲突识别</li>
+                  <li>偷盗 / 拉车门等异常行为链识别</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>事件指标提取</h3>
+                <p>抽取防区、点位、时间、人数、ROI 密度、滞留时长、冲突标签、置信度和短视频片段。</p>
+                <div class="metric-row">
+                  <span class="metric">人数</span>
+                  <span class="metric">ROI 密度</span>
+                  <span class="metric">持续时长</span>
+                  <span class="metric">冲突标签</span>
+                  <span class="metric">置信度</span>
+                </div>
+              </div>
+              <div class="card">
+                <h3>态势大屏与预警流</h3>
+                <p>GIS 地图、防区状态和实时预警流联动展示，值班员点击告警即可进入复核处置页面。</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="flow-link" data-label="统一事件输入"></div>
+
+          <section class="group-shell green">
+            <div class="group-title">统一事件对象</div>
+            <div class="stack">
+              <div class="card green">
+                <h3>事件标准化汇总</h3>
+                <p>把视频片段、识别结果、关键指标、防区位置、告警等级和处置上下文整理成统一事件，供大屏、复核台、记录模块共用。</p>
+                <div class="accent-box">这一层相当于把“识别结果”变成可处置、可记录、可复盘的标准事件对象。</div>
+              </div>
+              <div class="card green">
+                <h3>实时智能预警流</h3>
+                <p>在态势大屏持续展示未处置告警，支持按防区查看并一键打开复核窗口。</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="flow-link" data-label="点击告警进入复核"></div>
+
+          <section class="group-shell purple">
+            <div class="group-title">告警分级与极速复核</div>
+            <div class="review-grid">
+              <div class="card purple span-2">
+                <h3>等级判断与入口分流</h3>
+                <p>P0 直接进入极速复核台，P1 进入线索复核台。所有结果都由值班员最终确认，避免误报浪费警力。</p>
+              </div>
+              <div class="card purple">
+                <h3>P0 极速复核台</h3>
+                <ul class="list">
+                  <li>短视频优先展示</li>
+                  <li>聚集场景显示人数、ROI 密度、持续时长</li>
+                  <li>打架场景显示冲突标签、最近警力、处置建议</li>
+                  <li>确认属实后再派警</li>
+                </ul>
+              </div>
+              <div class="card purple">
+                <h3>P1 线索复核台</h3>
+                <ul class="list">
+                  <li>查看片段和基础指标</li>
+                  <li>适合拉车门、异常滞留等线索场景</li>
+                  <li>确认属实则转警</li>
+                  <li>否则回流误报样本</li>
+                </ul>
+              </div>
+              <div class="card purple span-2">
+                <h3>复核输出</h3>
+                <p>统一输出两类结果：`确认属实并处置` 或 `标记误报回流`，作为处置闭环与持续优化的起点。</p>
+                <div class="metric-row">
+                  <span class="metric purple">属实处置</span>
+                  <span class="metric purple">误报回流</span>
+                  <span class="metric purple">形成记录</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="decision-section">
+          <div class="decision-caption">复核结果分流</div>
+          <div class="decision-row">
+            <div class="branch-chip false">标记误报并回流</div>
+            <div class="diamond"><span>是否属实？</span></div>
+            <div class="branch-chip true">确认属实后处置</div>
+          </div>
+        </div>
+
+        <section class="loop-shell">
+          <div class="group-title">处置闭环与持续优化</div>
+          <div class="loop-grid">
+            <div class="card green">
+              <h3>误报回流 / 样本优化</h3>
+              <p>将正常活动、非警情视频标记为误报样本，回流算法侧补充负样本，降低同类场景重复告警。</p>
+            </div>
+            <div class="card green">
+              <h3>联动处置</h3>
+              <p>派发巡逻组、网格员、高音喇叭、入口管控、现场隔离等动作，形成前端可见的实战处置流程。</p>
+            </div>
+            <div class="card green">
+              <h3>历史处置记录</h3>
+              <p>沉淀告警触发、确认、派单、解除全过程，以及证据、指挥员、时间线和备注信息。</p>
+            </div>
+            <div class="card green">
+              <h3>复盘报告与规则回写</h3>
+              <p>P0 场景自动生成复盘初稿，后续将发现和改进建议回写到 ROI、阈值、SOP 和布控策略。</p>
+            </div>
+          </div>
+          <div class="loop-note">闭环目标：让“误报样本”“处置记录”“复盘结论”持续反哺前置配置，形成下一轮更精准的防区布控和规则设置。</div>
+        </section>
+
+        <div class="footer-note">
+          说明：这版重点先解决排版重叠和观感问题。后续如果你需要，我可以继续把它细化成“领导汇报版一页图”或者“聚集识别 / 打架斗殴专项流程图”。
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
